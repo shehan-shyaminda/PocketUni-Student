@@ -44,4 +44,7 @@ dependencies {
 
     // Custom Calender View
     implementation 'com.applandeo:material-calendar-view:1.7.0'
+
+    // Custom Intent Animation
+    implementation 'com.github.mohammadatif:Animatoo:master'
 }

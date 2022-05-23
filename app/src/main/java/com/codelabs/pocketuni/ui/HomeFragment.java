@@ -31,6 +31,9 @@ public class HomeFragment extends Fragment {
                 BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext(), R.style.BottSheetDialogTheme);
                 View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottomsheet_calender, view.findViewById(R.id.bottom_sheet_container));
                 CalendarView calendarView = bottomSheetView.findViewById(R.id.calendarView);
+
+                // TODO : ADD Event
+
                 bottomSheetDialog.setContentView(bottomSheetView);
                 bottomSheetDialog.show();
             }

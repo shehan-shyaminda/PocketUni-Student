@@ -26,7 +26,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView3">
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btn_login"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -40,7 +40,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+            app:layout_constraintTop_toBottomOf="@+id/txt_forgot_password" />
 
         <com.libizo.CustomEditText
             android:id="@+id/editTextTextPassword"
@@ -83,7 +83,7 @@
             app:libIZO_setStrokeWidth="1.5dp" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/txt_forgot_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
