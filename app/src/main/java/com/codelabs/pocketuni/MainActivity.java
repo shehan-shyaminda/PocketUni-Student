@@ -98,24 +98,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //-----------side drawer implementation---------------
     private void SideDrawerInitializing() {
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        mDrawerLayout = findViewById(R.id.drawer);
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
         mDrawerLayout.addDrawerListener(mToggle);
-        nvDrawer = (NavigationView) findViewById(R.id.nav_view);
+        nvDrawer = findViewById(R.id.nav_view);
         mToggle.syncState();
         setupDrawerContent(nvDrawer);
-//        ic_menuOpen = nvDrawer.findViewById(R.id.nav_drawer_open);
-//
-//        ic_menuOpen.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                setDrawerPosition();
-//            }
-//        });
 
-        //----------------pass value to header---------------
         View hView = nvDrawer.getHeaderView(0);
     }
 
