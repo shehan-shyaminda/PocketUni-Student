@@ -30,6 +30,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View view) {
                 startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
                 Animatoo.animateSlideRight(SignUpActivity.this);
+                finishAffinity();
             }
         });
 
@@ -45,6 +46,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View view) {
                 startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
                 Animatoo.animateSlideRight(SignUpActivity.this);
+                finishAffinity();
             }
         });
     }

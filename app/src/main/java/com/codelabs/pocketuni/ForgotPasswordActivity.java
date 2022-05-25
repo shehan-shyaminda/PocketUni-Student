@@ -30,6 +30,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             public void onClick(View view) {
                 startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class));
                 Animatoo.animateSlideRight(ForgotPasswordActivity.this);
+                finishAffinity();
             }
         });
 
@@ -45,6 +46,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             public void onClick(View view) {
                 startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class));
                 Animatoo.animateSlideRight(ForgotPasswordActivity.this);
+                finishAffinity();
             }
         });
     }

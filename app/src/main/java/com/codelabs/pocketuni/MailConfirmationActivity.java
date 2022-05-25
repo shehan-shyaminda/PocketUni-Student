@@ -25,6 +25,7 @@ public class MailConfirmationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 startActivity(new Intent(MailConfirmationActivity.this, LoginActivity.class));
                 Animatoo.animateSlideRight(MailConfirmationActivity.this);
+                finishAffinity();
             }
         });
     }
