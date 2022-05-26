@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private AnimatedBottomBar bottomBar;
     private ImageView icMenu, btnCalender;
     private TextView fragmentTitle;
+    private ConstraintLayout appbarLayout;
+
     boolean doubleBackToExitPressedOnce = false;
 
     @Override
@@ -50,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         bottomBar = findViewById(R.id.bottomMenu);
         fragmentTitle = findViewById(R.id.fragmentTitle);
         icMenu = findViewById(R.id.ic_menu);
+        appbarLayout = findViewById(R.id.layout_appbar);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, new HomeFragment()).commit();
         bottomBar.selectTabById(R.id.home,true);
@@ -69,26 +73,32 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(int i, @Nullable AnimatedBottomBar.Tab tab, int i1, @NonNull AnimatedBottomBar.Tab tab1) {
                 Fragment fragment = null;
                 String title = "";
+                int color = getResources().getColor(R.color.white);
                 switch (tab1.getId()) {
                     case R.id.home:
                         fragment = new HomeFragment();
                         title = "My Events";
+                        color = getResources().getColor(R.color.white);
                         break;
                     case R.id.notices:
                         fragment = new NoticesFragment();
                         title = "Batch Notices";
+                        color = getResources().getColor(R.color.white);
                         break;
                     case R.id.announcements:
                         fragment = new AnnouncementsFragment();
                         title = "Public Notices";
+                        color = getResources().getColor(R.color.white);
                         break;
                     case R.id.profile:
                         fragment = new ProfileFragment();
                         title = "My Profile";
+                        color = getResources().getColor(R.color.secondary_blue);
                         break;
                 }
                 getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).commit();
                 fragmentTitle.setText(title);
+                appbarLayout.setBackgroundColor(color);
             }
 
             @Override

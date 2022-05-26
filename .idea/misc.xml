@@ -17,6 +17,8 @@
         <entry key="app/src/main/res/drawable/ic_profile.xml" value="0.2085" />
         <entry key="app/src/main/res/drawable/ic_us.xml" value="0.3285" />
         <entry key="app/src/main/res/drawable/nav_drawer_headder.xml" value="0.2085" />
+        <entry key="app/src/main/res/drawable/profile_body_background.xml" value="0.3285" />
+        <entry key="app/src/main/res/drawable/profile_headder_background.xml" value="0.3285" />
         <entry key="app/src/main/res/layout/activity_forgot_password.xml" value="0.16391601562500002" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.28988494873046877" />
         <entry key="app/src/main/res/layout/activity_mail_confirmation.xml" value="0.13782894736842105" />
@@ -25,9 +27,9 @@
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.6447128295898438" />
         <entry key="app/src/main/res/layout/bottomsheet_calender.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_announcements.xml" value="0.28055555555555556" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.3804885864257813" />
-        <entry key="app/src/main/res/layout/fragment_notices.xml" value="0.27794871794871795" />
-        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.27794871794871795" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.19941558837890627" />
+        <entry key="app/src/main/res/layout/fragment_notices.xml" value="0.250390625" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.26182432432432434" />
         <entry key="app/src/main/res/layout/nav_drawer_headder.xml" value="0.3226943969726562" />
         <entry key="app/src/main/res/menu/nav_bottom_menu.xml" value="0.5182536937572338" />
         <entry key="app/src/main/res/menu/nav_drawer_menu.xml" value="0.12129629629629629" />
