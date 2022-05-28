@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -32,6 +33,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'com.google.firebase:firebase-firestore:24.1.2'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
@@ -47,4 +49,10 @@ dependencies {
 
     // Custom Intent Animation
     implementation 'com.github.mohammadatif:Animatoo:master'
+
+    // Custom Alert Dialog
+    implementation 'com.crowdfire.cfalertdialog:cfalertdialog:1.1.0'
+
+    // Custom Progress View
+    implementation 'com.kaopiz:kprogresshud:1.2.0'
 }
