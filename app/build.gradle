@@ -55,4 +55,7 @@ dependencies {
 
     // Custom Progress View
     implementation 'com.kaopiz:kprogresshud:1.2.0'
+
+    // Gson Library
+    implementation 'com.google.code.gson:gson:2.9.0'
 }

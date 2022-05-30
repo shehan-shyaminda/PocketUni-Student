@@ -8,19 +8,29 @@ import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.codelabs.pocketuni.services.SharedPreferencesManager;
+
 public class SplashActivity extends AppCompatActivity {
 
+    SharedPreferencesManager sharedPreferencesManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        sharedPreferencesManager = new SharedPreferencesManager(SplashActivity.this);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                if(sharedPreferencesManager.getBooleanPreferences(SharedPreferencesManager.USER_LOGGED_IN) == true) {
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                }else{
+                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                }
                 finishAffinity();
             }
-        }, 3000);
+        }, 0);
 
     }
 }

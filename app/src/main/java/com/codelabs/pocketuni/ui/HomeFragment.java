@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.applandeo.materialcalendarview.CalendarView;
+import com.applandeo.materialcalendarview.EventDay;
+import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
 import com.codelabs.pocketuni.MainActivity;
 import com.codelabs.pocketuni.R;
 import com.codelabs.pocketuni.adapters.EventsAdapter;
@@ -32,8 +34,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
@@ -43,6 +48,7 @@ public class HomeFragment extends Fragment {
     private View bottomSheetView;
     private ListView listView;
     private CalendarView calendarView;
+    private Calendar calendar;
     private ConstraintLayout bottomSheetContainer;
     private FirebaseFirestore db;
     private CalenderItem calenderItem;
@@ -62,17 +68,26 @@ public class HomeFragment extends Fragment {
         listView = view.findViewById(R.id.lst_calenderEvents);
 
         db = FirebaseFirestore.getInstance();
+        calendar = Calendar.getInstance();
 
         init();
 
         btnCalender.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 // TODO : ADD Event
 
                 bottomSheetDialog.setContentView(bottomSheetView);
                 bottomSheetDialog.show();
+            }
+        });
+
+        calendarView.setOnDayClickListener(new OnDayClickListener() {
+            @Override
+            public void onDayClick(EventDay eventDay) {
+                Calendar clickedDayCalendar = eventDay.getCalendar();
+                filterEvents(clickedDayCalendar);
+                bottomSheetDialog.cancel();
             }
         });
 
@@ -82,19 +97,19 @@ public class HomeFragment extends Fragment {
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_HIDDEN:
-                        Log.e(TAG, "onStateChanged: Hidden Sheet");
+//                        Log.e(TAG, "onStateChanged: Hidden Sheet");
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
-                        Log.e(TAG, "onStateChanged: Close Sheet");
+//                        Log.e(TAG, "onStateChanged: Close Sheet");
                         break;
                     case BottomSheetBehavior.STATE_COLLAPSED:
-                        Log.e(TAG, "onStateChanged: Expand Sheet");
+//                        Log.e(TAG, "onStateChanged: Expand Sheet");
                         break;
                     case BottomSheetBehavior.STATE_DRAGGING:
-                        Log.e(TAG, "onStateChanged: Dragging Sheet");
+//                        Log.e(TAG, "onStateChanged: Dragging Sheet");
                         break;
                     case BottomSheetBehavior.STATE_SETTLING:
-                        Log.e(TAG, "onStateChanged: Settling Sheet");
+//                        Log.e(TAG, "onStateChanged: Settling Sheet");
                         break;
                 }
             }
@@ -108,96 +123,38 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    private void init() {
-        eventsList = new ArrayList<>();
-
-        // get data from calender collection
-        db.collection("Calander").get()
-//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                        if (queryDocumentSnapshots.isEmpty()){
-//                            Log.e(TAG, "onSuccess: Empty Collection");
-//                        }else{
-//                            DocumentSnapshot snapsList;
-//                            for(int i = 0; i < queryDocumentSnapshots.getDocuments().size(); i++){
-//                                snapsList = queryDocumentSnapshots.getDocuments().get(i);
-//                                eventsList.add(new CalenderItem(snapsList.get("calenderCourse").toString(), snapsList.get("calenderBatch").toString(), snapsList.get("calenderBatchType").toString(),
-//                                        snapsList.get("calenderDate").toString(), snapsList.get("calenderDescription").toString(), snapsList.get("calenderTime").toString(),
-//                                        snapsList.get("calenderTitle").toString()));
-//                                Log.e(TAG, "onSuccess: " + queryDocumentSnapshots.getDocuments() );
-//                            }
-//                        }
-//                    }
-//                })
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.getResult().isEmpty()){
-                            Log.e(TAG, "onSuccess: Empty Collection");
-                            setAdapter();
-                        }else{
-                            DocumentSnapshot snapsList;
-                            for(int i = 0; i < task.getResult().getDocuments().size(); i++){
-                                snapsList = task.getResult().getDocuments().get(i);
-                                eventsList.add(new CalenderItem(snapsList.get("calenderCourse").toString(), snapsList.get("calenderBatch").toString(), snapsList.get("calenderBatchType").toString(),
-                                        snapsList.get("calenderDate").toString(), snapsList.get("calenderDescription").toString(), snapsList.get("calenderTime").toString(),
-                                        snapsList.get("calenderTitle").toString()));
-//                                Log.e(TAG, "onSuccess: " + task.getResult().getDocuments() );
-                            }
-                            setAdapter();
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "onFailure: " + e);
-                    }
-                });
+    private void init(){
+        filterEvents(Calendar.getInstance());
     }
 
-    public void setAdapter(){
-        // get data from calender collection
-        db.collection("HallAllocation").get()
-//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                        if (queryDocumentSnapshots.isEmpty()){
-//                            Log.e(TAG, "onSuccess: Empty Collection");
-//                            EventsAdapter listAdapter = new EventsAdapter(getActivity(), eventsList);
-//                            listView.setAdapter(listAdapter);
-//                            Log.e(TAG, "init: " + eventsList );
-//                        }else{
-//                            DocumentSnapshot snapsList;
-//                            for(int i = 0; i < queryDocumentSnapshots.getDocuments().size(); i++){
-//                                snapsList = queryDocumentSnapshots.getDocuments().get(i);
-//                                eventsList.add(new CalenderItem(snapsList.get("allocateDate").toString(), snapsList.get("allocatedTime").toString(), snapsList.get("allocationType").toString(),
-//                                        snapsList.get("batch").toString(), snapsList.get("batchType").toString(), snapsList.get("course").toString(), snapsList.get("hallName").toString(),
-//                                        snapsList.get("lecturer").toString(), snapsList.get("subject").toString()));
-//                                Log.e(TAG, "onSuccess: " + queryDocumentSnapshots.getDocuments() );
-//                            }
-//                            EventsAdapter listAdapter = new EventsAdapter(getActivity(), eventsList);
-//                            listView.setAdapter(listAdapter);
-//                        }
-//                    }
-//                })
+    public void filterEvents(Calendar calendar){
+        String date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(calendar.getTime());
+//        Log.e(TAG, "filterEvents: " + date);
+
+        listView.setAdapter(null);
+        eventsList = new ArrayList<>();
+
+//         get data from calender collection
+        db.collection("Events")
+                .whereEqualTo("eventDate", date)
+                .whereEqualTo("eventCourse", "DSC")
+                .whereEqualTo("eventBatch", "21.2")
+                .whereEqualTo("eventBatchType", "P")
+                .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.getResult().isEmpty()){
                             Log.e(TAG, "onSuccess: Empty Collection");
-                            EventsAdapter listAdapter = new EventsAdapter(getActivity(), eventsList);
-                            listView.setAdapter(listAdapter);
                         }else{
                             DocumentSnapshot snapsList;
                             for(int i = 0; i < task.getResult().getDocuments().size(); i++){
                                 snapsList = task.getResult().getDocuments().get(i);
-                                eventsList.add(new CalenderItem(snapsList.get("allocateDate").toString(), snapsList.get("allocatedTime").toString(), snapsList.get("allocationType").toString(),
-                                        snapsList.get("batch").toString(), snapsList.get("batchType").toString(), snapsList.get("course").toString(), snapsList.get("hallName").toString(),
-                                        snapsList.get("lecturer").toString(), snapsList.get("subject").toString()));
-//                                Log.e(TAG, "onSuccess: " + task.getResult().getDocuments() );
+                                eventsList.add(new CalenderItem(snapsList.get("eventBatch").toString(), snapsList.get("eventBatchType").toString(), snapsList.get("eventCourse").toString(),
+                                        snapsList.get("eventDate").toString(), snapsList.get("eventTime").toString(), snapsList.get("eventType").toString(),
+                                        snapsList.get("eventSubject").toString(), snapsList.get("eventLecturer").toString(), snapsList.get("eventHallName").toString()));
                             }
+
                             EventsAdapter listAdapter = new EventsAdapter(getActivity(), eventsList);
                             listView.setAdapter(listAdapter);
                         }
@@ -211,3 +168,42 @@ public class HomeFragment extends Fragment {
                 });
     }
 }
+
+//    // get data from calender collection
+//                            db.collection("HallAllocation")
+//                                    .whereEqualTo("allocateDate", date)
+//                                    .whereEqualTo("course", "")
+//                                    .whereEqualTo("batch", "")
+//                                    .whereEqualTo("batchType", "")
+//                                    .get()
+//                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//        @Override
+//        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//            if (task.getResult().isEmpty()){
+//                Log.e(TAG, "onSuccess: Empty Collection");
+//
+//                listView.setEnabled(false);
+//                listView.setVisibility(View.GONE);
+////                                                EventsAdapter listAdapter = new EventsAdapter(getActivity(), eventsList);
+////                                                listView.setAdapter(listAdapter);
+////                                                Log.e(TAG, "onComplete: " + eventsList);
+//            }else{
+//                DocumentSnapshot snapsList;
+//                for(int i = 0; i < task.getResult().getDocuments().size(); i++){
+//                    snapsList = task.getResult().getDocuments().get(i);
+//                    eventsList.add(new CalenderItem(snapsList.get("allocateDate").toString(), snapsList.get("allocatedTime").toString(), snapsList.get("allocationType").toString(),
+//                            snapsList.get("batch").toString(), snapsList.get("batchType").toString(), snapsList.get("course").toString(), snapsList.get("hallName").toString(),
+//                            snapsList.get("lecturer").toString(), snapsList.get("subject").toString()));
+//                }
+//                EventsAdapter listAdapter = new EventsAdapter(getActivity(), eventsList);
+//                listView.setAdapter(listAdapter);
+//                Log.e(TAG, "onComplete: " + eventsList);
+//            }
+//        }
+//    })
+//            .addOnFailureListener(new OnFailureListener() {
+//        @Override
+//        public void onFailure(@NonNull Exception e) {
+//            Log.e(TAG, "onFailure: " + e);
+//        }
+//    });

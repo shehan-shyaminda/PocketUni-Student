@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.codelabs.pocketuni.services.SharedPreferencesManager;
 import com.codelabs.pocketuni.utils.CustomAlertDialog;
 import com.codelabs.pocketuni.utils.CustomProgressDialog;
 import com.crowdfire.cfalertdialog.CFAlertDialog;
@@ -30,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     CustomEditText txtUsername, txtPassword;
     CustomProgressDialog customProgressDialog;
     FirebaseFirestore db;
+    SharedPreferencesManager sharedPreferencesManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
 
         customProgressDialog = new CustomProgressDialog(LoginActivity.this);
         db = FirebaseFirestore.getInstance();
+        sharedPreferencesManager = new SharedPreferencesManager(LoginActivity.this);
 
         btnForgotPassword = findViewById(R.id.btn_forgot_password);
         btnLogin = findViewById(R.id.btn_login);
@@ -73,6 +76,10 @@ public class LoginActivity extends AppCompatActivity {
                                 if (documentSnapshot.exists()){
                                     if (documentSnapshot.get("studentPassword").equals(txtPassword.getText().toString())){
                                         customProgressDialog.dismissProgress();
+
+                                        sharedPreferencesManager.savePreferences(SharedPreferencesManager.USER_LOGGED_IN, true);
+                                        sharedPreferencesManager.savePreferences(SharedPreferencesManager.USER_ID, txtUsername.getText().toString().toUpperCase());
+
                                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                         finishAffinity();
                                     }else{
