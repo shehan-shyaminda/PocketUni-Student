@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.codelabs.pocketuni.models.CalenderItem;
+import com.codelabs.pocketuni.models.Student;
 import com.google.gson.Gson;
 
 public class SharedPreferencesManager {
@@ -41,17 +42,17 @@ public class SharedPreferencesManager {
         return sharedPreferences.getBoolean(key,false);
     }
 
-    public void saveUserDataPreferences(String key, CalenderItem userObject){
+    public void saveStudentDataPreferences(String key, Student studentObject){
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
-        String json = gson.toJson(userObject);
+        String json = gson.toJson(studentObject);
         editor.putString(key, json);
         editor.commit();
     }
 
-    public CalenderItem getUserDataPreferences(String key){
+    public Student getStudentDataPreferences(String key){
         String json = sharedPreferences.getString(key, "");
-        CalenderItem user = gson.fromJson(json, CalenderItem.class);
+        Student user = gson.fromJson(json, Student.class);
         if (user != null) {
             return user;
         }else{

@@ -47,12 +47,9 @@ public class EventsAdapter extends ArrayAdapter<CalenderItem> {
         TextView txtHall = row.findViewById(R.id.txt_eventHall);
         TextView txtTime = row.findViewById(R.id.txt_eventTime);
         ImageView icEvent = row.findViewById(R.id.event_ic);
-//
+
         try {
             String[] dateParts = eventsList.get(position).getEventDate().split("/");
-//            int year = Integer.parseInt(dateParts[2]); //=> 2022
-//            int month = Integer.parseInt(dateParts[1]); //=> 05
-//            int day = Integer.parseInt(dateParts[0]); //=> 29
 
             String year = dateParts[2]; //=> 2022
             String month = dateParts[1]; //=> 05
@@ -61,21 +58,15 @@ public class EventsAdapter extends ArrayAdapter<CalenderItem> {
             Calendar c = Calendar.getInstance();
             c.set(Integer.parseInt(year), Integer.parseInt(month) - 1, Integer.parseInt(date));
 
-            Log.e(TAG, "Friday: " + new SimpleDateFormat("EEE").format(c.getTime()).substring(0,3));
-            Log.e(TAG, "13: " + date );
-            Log.e(TAG, "may: " + new SimpleDateFormat("MMM").format(c.getTime()).substring(0,3));
-
-//
             txtDay.setText(new SimpleDateFormat("EEEE").format(c.getTime()).substring(0,3));
             txtDate.setText(date);
             txtMonth.setText(new SimpleDateFormat("MMM").format(c.getTime()).substring(0,3));
             txtTitle.setText(eventsList.get(position).getEventCourse());
-            txtType.setText(eventsList.get(position).getEventType());
+            txtType.setText(eventsList.get(position).getEventType().substring(0, 1).toUpperCase() + eventsList.get(position).getEventType().substring(1).toLowerCase());
             txtLecturer.setText(eventsList.get(position).getEventLecturer());
             txtHall.setText(eventsList.get(position).getEventHallName());
             txtTime.setText(eventsList.get(position).getEventTime());
 
-            Log.e(TAG, "getView: " + eventsList.get(position).getEventType());
             if (eventsList.get(position).getEventType().equals("EXAM")){
                 icEvent.setImageResource(R.drawable.ic_exam);
             }else{

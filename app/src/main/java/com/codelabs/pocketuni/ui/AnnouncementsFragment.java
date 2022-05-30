@@ -1,66 +1,99 @@
 package com.codelabs.pocketuni.ui;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.codelabs.pocketuni.R;
+import com.codelabs.pocketuni.adapters.AnnouncementAdapter;
+import com.codelabs.pocketuni.adapters.NoticesAdapter;
+import com.codelabs.pocketuni.models.Announcement;
+import com.codelabs.pocketuni.models.Notice;
+import com.codelabs.pocketuni.services.SharedPreferencesManager;
+import com.codelabs.pocketuni.utils.CustomProgressDialog;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AnnouncementsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
+
 public class AnnouncementsFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public AnnouncementsFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AnnouncementsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AnnouncementsFragment newInstance(String param1, String param2) {
-        AnnouncementsFragment fragment = new AnnouncementsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private ListView listView;
+    private FirebaseFirestore db;
+    private ArrayList<Announcement> announcementList;
+    private SharedPreferencesManager sharedPreferencesManager;
+    private Calendar calendar;
+    private CustomProgressDialog customProgressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_announcements, container, false);
+
+        View view =  inflater.inflate(R.layout.fragment_announcements, container, false);
+
+        listView = view.findViewById(R.id.lst_publicNotices);
+
+        db = FirebaseFirestore.getInstance();
+        sharedPreferencesManager = new SharedPreferencesManager(getContext());
+        calendar = Calendar.getInstance();
+        customProgressDialog = new CustomProgressDialog(getContext());
+
+        init();
+
+        return view;
+    }
+
+    private void init(){
+        listView.setAdapter(null);
+        announcementList = new ArrayList<>();
+
+        String date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(calendar.getTime());
+        Log.e(TAG, "filterNotification: " + date);
+
+        customProgressDialog.createProgress();
+        db.collection("Notifications")
+                .whereEqualTo("notificationDate", date)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.getResult().isEmpty()){
+                            Log.e(TAG, "onSuccess: Empty Collection");
+                        }else{
+                            DocumentSnapshot snapsList;
+                            for(int i = 0; i < task.getResult().getDocuments().size(); i++){
+                                snapsList = task.getResult().getDocuments().get(i);
+                                announcementList.add(new Announcement(snapsList.get("notificationDate").toString(), snapsList.get("notificationDesc").toString(), snapsList.get("notificationTitle").toString()));
+                            }
+
+                            AnnouncementAdapter listAdapter = new AnnouncementAdapter(getActivity(), announcementList);
+                            listView.setAdapter(listAdapter);
+                        }
+                        customProgressDialog.dismissProgress();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        customProgressDialog.dismissProgress();
+                        Log.e(TAG, "onFailure: " + e);
+                    }
+                });
     }
 }

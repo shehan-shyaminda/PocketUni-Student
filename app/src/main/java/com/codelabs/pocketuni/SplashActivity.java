@@ -12,7 +12,7 @@ import com.codelabs.pocketuni.services.SharedPreferencesManager;
 
 public class SplashActivity extends AppCompatActivity {
 
-    SharedPreferencesManager sharedPreferencesManager;
+    private SharedPreferencesManager sharedPreferencesManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +30,7 @@ public class SplashActivity extends AppCompatActivity {
                 }
                 finishAffinity();
             }
-        }, 0);
+        }, 2000);
 
     }
 }

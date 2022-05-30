@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.codelabs.pocketuni.models.Student;
 import com.codelabs.pocketuni.services.SharedPreferencesManager;
 import com.codelabs.pocketuni.utils.CustomAlertDialog;
 import com.codelabs.pocketuni.utils.CustomProgressDialog;
@@ -26,12 +27,12 @@ import com.libizo.CustomEditText;
 
 public class LoginActivity extends AppCompatActivity {
 
-    TextView btnForgotPassword, btnReqLogin;
-    Button btnLogin;
-    CustomEditText txtUsername, txtPassword;
-    CustomProgressDialog customProgressDialog;
-    FirebaseFirestore db;
-    SharedPreferencesManager sharedPreferencesManager;
+    private TextView btnForgotPassword, btnReqLogin;
+    private Button btnLogin;
+    private CustomEditText txtUsername, txtPassword;
+    private CustomProgressDialog customProgressDialog;
+    private FirebaseFirestore db;
+    private SharedPreferencesManager sharedPreferencesManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,9 @@ public class LoginActivity extends AppCompatActivity {
 
                                         sharedPreferencesManager.savePreferences(SharedPreferencesManager.USER_LOGGED_IN, true);
                                         sharedPreferencesManager.savePreferences(SharedPreferencesManager.USER_ID, txtUsername.getText().toString().toUpperCase());
+                                        sharedPreferencesManager.saveStudentDataPreferences(SharedPreferencesManager.USER_DETAILS, new Student(documentSnapshot.get("studentBatch").toString(),
+                                                documentSnapshot.get("studentBatchType").toString(), documentSnapshot.get("studentCourse").toString(), documentSnapshot.get("studentEmail").toString(),
+                                                documentSnapshot.get("studentName").toString(), documentSnapshot.get("studentPassword").toString()));
 
                                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                         finishAffinity();

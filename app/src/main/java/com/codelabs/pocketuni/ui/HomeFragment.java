@@ -15,14 +15,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
+import com.codelabs.pocketuni.LoginActivity;
 import com.codelabs.pocketuni.MainActivity;
 import com.codelabs.pocketuni.R;
 import com.codelabs.pocketuni.adapters.EventsAdapter;
 import com.codelabs.pocketuni.models.CalenderItem;
+import com.codelabs.pocketuni.services.SharedPreferencesManager;
+import com.codelabs.pocketuni.utils.CustomProgressDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,6 +47,7 @@ import java.util.Locale;
 public class HomeFragment extends Fragment {
 
     private ImageView btnCalender;
+    private TextView txtEmptyEvents, txtWelcomeName;
     private BottomSheetBehavior bottomSheetBehavior;
     private BottomSheetDialog bottomSheetDialog;
     private View bottomSheetView;
@@ -53,6 +58,8 @@ public class HomeFragment extends Fragment {
     private FirebaseFirestore db;
     private CalenderItem calenderItem;
     private ArrayList<CalenderItem> eventsList;
+    private SharedPreferencesManager sharedPreferencesManager;
+    private CustomProgressDialog customProgressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,9 +73,13 @@ public class HomeFragment extends Fragment {
         bottomSheetContainer = bottomSheetView.findViewById(R.id.bottom_sheet_container);
         calendarView = bottomSheetView.findViewById(R.id.calendarView);
         listView = view.findViewById(R.id.lst_calenderEvents);
+        txtEmptyEvents = view.findViewById(R.id.txt_emptyEvents);
+        txtWelcomeName = view.findViewById(R.id.txt_welcome_name);
 
         db = FirebaseFirestore.getInstance();
         calendar = Calendar.getInstance();
+        sharedPreferencesManager = new SharedPreferencesManager(getContext());
+        customProgressDialog = new CustomProgressDialog(getContext());
 
         init();
 
@@ -124,28 +135,38 @@ public class HomeFragment extends Fragment {
     }
 
     private void init(){
-        filterEvents(Calendar.getInstance());
+        if (sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentName().isEmpty()){
+            txtWelcomeName.setText(sharedPreferencesManager.getPreferences(SharedPreferencesManager.USER_ID));
+        }else{
+            txtWelcomeName.setText(sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentName());
+        }
+        filterEvents(calendar);
     }
 
-    public void filterEvents(Calendar calendar){
+    private void filterEvents(Calendar calendar){
         String date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(calendar.getTime());
-//        Log.e(TAG, "filterEvents: " + date);
+        Log.e(TAG, "filterEvents: " + date);
 
         listView.setAdapter(null);
         eventsList = new ArrayList<>();
 
+        customProgressDialog.createProgress();
 //         get data from calender collection
         db.collection("Events")
                 .whereEqualTo("eventDate", date)
-                .whereEqualTo("eventCourse", "DSC")
-                .whereEqualTo("eventBatch", "21.2")
-                .whereEqualTo("eventBatchType", "P")
+                .whereEqualTo("eventCourse", sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentCourse())
+                .whereEqualTo("eventBatch", sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentBatch())
+                .whereEqualTo("eventBatchType", sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentBatchType())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.getResult().isEmpty()){
                             Log.e(TAG, "onSuccess: Empty Collection");
+                            listView.setEnabled(false);
+                            listView.setVisibility(View.GONE);
+                            txtEmptyEvents.setEnabled(true);
+                            txtEmptyEvents.setVisibility(View.VISIBLE);
                         }else{
                             DocumentSnapshot snapsList;
                             for(int i = 0; i < task.getResult().getDocuments().size(); i++){
@@ -155,14 +176,21 @@ public class HomeFragment extends Fragment {
                                         snapsList.get("eventSubject").toString(), snapsList.get("eventLecturer").toString(), snapsList.get("eventHallName").toString()));
                             }
 
+                            txtEmptyEvents.setEnabled(false);
+                            txtEmptyEvents.setVisibility(View.GONE);
+                            listView.setEnabled(true);
+                            listView.setVisibility(View.VISIBLE);
+
                             EventsAdapter listAdapter = new EventsAdapter(getActivity(), eventsList);
                             listView.setAdapter(listAdapter);
                         }
+                        customProgressDialog.dismissProgress();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        customProgressDialog.dismissProgress();
                         Log.e(TAG, "onFailure: " + e);
                     }
                 });
