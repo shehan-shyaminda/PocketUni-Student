@@ -58,6 +58,7 @@ public class HomeFragment extends Fragment {
     private FirebaseFirestore db;
     private CalenderItem calenderItem;
     private ArrayList<CalenderItem> eventsList;
+    private List<EventDay> events;
     private SharedPreferencesManager sharedPreferencesManager;
     private CustomProgressDialog customProgressDialog;
 
@@ -135,12 +136,17 @@ public class HomeFragment extends Fragment {
     }
 
     private void init(){
+//        customProgressDialog.createProgress();
+
         if (sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentName().isEmpty()){
             txtWelcomeName.setText(sharedPreferencesManager.getPreferences(SharedPreferencesManager.USER_ID));
         }else{
             txtWelcomeName.setText(sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentName());
         }
+        getCalenderEvents();
         filterEvents(calendar);
+
+//        customProgressDialog.dismissProgress();
     }
 
     private void filterEvents(Calendar calendar){
@@ -184,6 +190,52 @@ public class HomeFragment extends Fragment {
                             EventsAdapter listAdapter = new EventsAdapter(getActivity(), eventsList);
                             listView.setAdapter(listAdapter);
                         }
+                        customProgressDialog.dismissProgress();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        customProgressDialog.dismissProgress();
+                        Log.e(TAG, "onFailure: " + e);
+                    }
+                });
+    }
+
+    private void getCalenderEvents(){
+        calendarView.setEvents(null);
+        events = new ArrayList<>();
+
+        customProgressDialog.createProgress();
+//         get data from calender collection
+        db.collection("Events")
+                .whereEqualTo("eventCourse", sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentCourse())
+                .whereEqualTo("eventBatch", sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentBatch())
+                .whereEqualTo("eventBatchType", sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentBatchType())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.getResult().isEmpty()){
+                            customProgressDialog.dismissProgress();
+                            Log.e(TAG, "onSuccess: Empty");
+                        }else{
+                            DocumentSnapshot snapsList;
+                            for(int i = 0; i < task.getResult().getDocuments().size(); i++){
+                                snapsList = task.getResult().getDocuments().get(i);
+
+                                String[] dateParts = snapsList.get("eventDate").toString().split("/");
+
+                                Calendar c = Calendar.getInstance();
+
+                                c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dateParts[0]));
+                                c.set(Calendar.MONTH, Integer.parseInt(dateParts[1]) - 1);
+                                c.set(Calendar.YEAR, Integer.parseInt(dateParts[2]));
+
+                                events.add(new EventDay(c, R.drawable.ic_dot));
+                            }
+                        }
+                        calendarView.setEvents(events);
                         customProgressDialog.dismissProgress();
                     }
                 })
