@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import com.codelabs.pocketuni.R;
 import com.codelabs.pocketuni.adapters.AnnouncementAdapter;
+import com.codelabs.pocketuni.adapters.EventsAdapter;
 import com.codelabs.pocketuni.adapters.NoticesAdapter;
 import com.codelabs.pocketuni.models.Announcement;
 import com.codelabs.pocketuni.models.Notice;
@@ -82,8 +83,10 @@ public class AnnouncementsFragment extends Fragment {
                                 announcementList.add(new Announcement(snapsList.get("notificationDate").toString(), snapsList.get("notificationDesc").toString(), snapsList.get("notificationTitle").toString()));
                             }
 
-                            AnnouncementAdapter listAdapter = new AnnouncementAdapter(getActivity(), announcementList);
-                            listView.setAdapter(listAdapter);
+                            if (getActivity()!=null){
+                                AnnouncementAdapter listAdapter = new AnnouncementAdapter(getActivity(), announcementList);
+                                listView.setAdapter(listAdapter);
+                            }
                         }
                         customProgressDialog.dismissProgress();
                     }

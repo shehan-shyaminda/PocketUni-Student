@@ -187,8 +187,10 @@ public class HomeFragment extends Fragment {
                             listView.setEnabled(true);
                             listView.setVisibility(View.VISIBLE);
 
-                            EventsAdapter listAdapter = new EventsAdapter(getActivity(), eventsList);
-                            listView.setAdapter(listAdapter);
+                            if (getActivity()!=null){
+                                EventsAdapter listAdapter = new EventsAdapter(getActivity(), eventsList);
+                                listView.setAdapter(listAdapter);
+                            }
                         }
                         customProgressDialog.dismissProgress();
                     }

@@ -86,8 +86,10 @@ public class NoticesFragment extends Fragment {
                                         snapsList.get("noticeDate").toString(), snapsList.get("noticeDesc").toString(), snapsList.get("noticeTitle").toString()));
                             }
 
-                            NoticesAdapter listAdapter = new NoticesAdapter(getActivity(), noticeList);
-                            listView.setAdapter(listAdapter);
+                            if (getActivity()!=null){
+                                NoticesAdapter listAdapter = new NoticesAdapter(getActivity(), noticeList);
+                                listView.setAdapter(listAdapter);
+                            }
                         }
                         customProgressDialog.dismissProgress();
                     }
