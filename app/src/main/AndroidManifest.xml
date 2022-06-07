@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.codelabs.pocketuni">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,23 +14,32 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PocketUni">
         <activity
-            android:name=".ForgotPasswordActivity"
+            android:name=".views.ContactUsActivity"
             android:exported="false" />
         <activity
-            android:name=".MailConfirmationActivity"
+            android:name=".views.HelpSupportActivity"
             android:exported="false" />
         <activity
-            android:name=".SignUpActivity"
+            android:name=".views.AboutUsActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".views.ForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan"
+            android:name=".views.MailConfirmationActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".views.SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.MainActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".views.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

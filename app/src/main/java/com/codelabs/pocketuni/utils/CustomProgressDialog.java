@@ -16,6 +16,7 @@ public class CustomProgressDialog {
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
                 .setAnimationSpeed(1)
                 .setDimAmount(0.5f)
+                .setCancellable(false)
                 .show();
     }
 

@@ -8,11 +8,8 @@ import com.crowdfire.cfalertdialog.CFAlertDialog;
 public class CustomAlertDialog {
     CFAlertDialog.Builder cfAlertDialog;
 
-    public CustomAlertDialog(Context context){
+    public void positiveAlert(Context context, String title, String description, String buttonTitle, CFAlertDialog.CFAlertStyle style){
         cfAlertDialog = new CFAlertDialog.Builder(context);
-    }
-
-    public void positiveAlert(String title, String description, String buttonTitle, CFAlertDialog.CFAlertStyle style){
         cfAlertDialog
                 .setDialogStyle(style)
                 .setTitle(title + " \uD83C\uDF8A")
@@ -27,7 +24,8 @@ public class CustomAlertDialog {
     }
 
 
-    public void negativeAlert(String title, String description, String buttonTitle, CFAlertDialog.CFAlertStyle style){
+    public void negativeAlert(Context context, String title, String description, String buttonTitle, CFAlertDialog.CFAlertStyle style){
+        cfAlertDialog = new CFAlertDialog.Builder(context);
         cfAlertDialog
                 .setDialogStyle(style)
                 .setTitle(title + " \uD83E\uDD2F")

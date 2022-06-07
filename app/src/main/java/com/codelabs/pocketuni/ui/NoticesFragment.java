@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.codelabs.pocketuni.R;
 import com.codelabs.pocketuni.adapters.EventsAdapter;
@@ -40,6 +41,7 @@ public class NoticesFragment extends Fragment {
     private SharedPreferencesManager sharedPreferencesManager;
     private Calendar calendar;
     private CustomProgressDialog customProgressDialog;
+    private TextView txtEmptyNotices;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +50,7 @@ public class NoticesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_notices, container, false);
 
         listView = view.findViewById(R.id.lst_batchNotices);
+        txtEmptyNotices = view.findViewById(R.id.txt_emptyBNotices);
 
         db = FirebaseFirestore.getInstance();
         sharedPreferencesManager = new SharedPreferencesManager(getContext());
@@ -78,6 +81,10 @@ public class NoticesFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.getResult().isEmpty()){
                             Log.e(TAG, "onSuccess: Empty Collection");
+                            listView.setEnabled(false);
+                            listView.setVisibility(View.GONE);
+                            txtEmptyNotices.setEnabled(true);
+                            txtEmptyNotices.setVisibility(View.VISIBLE);
                         }else{
                             DocumentSnapshot snapsList;
                             for(int i = 0; i < task.getResult().getDocuments().size(); i++){
@@ -85,6 +92,11 @@ public class NoticesFragment extends Fragment {
                                 noticeList.add(new Notice(snapsList.get("noticeBatch").toString(), snapsList.get("noticeBatchType").toString(), snapsList.get("noticeCourse").toString(),
                                         snapsList.get("noticeDate").toString(), snapsList.get("noticeDesc").toString(), snapsList.get("noticeTitle").toString()));
                             }
+
+                            txtEmptyNotices.setEnabled(false);
+                            txtEmptyNotices.setVisibility(View.GONE);
+                            listView.setEnabled(true);
+                            listView.setVisibility(View.VISIBLE);
 
                             if (getActivity()!=null){
                                 NoticesAdapter listAdapter = new NoticesAdapter(getActivity(), noticeList);
