@@ -13,6 +13,7 @@ import com.codelabs.pocketuni.services.SharedPreferencesManager;
 public class SplashActivity extends AppCompatActivity {
 
     private SharedPreferencesManager sharedPreferencesManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
