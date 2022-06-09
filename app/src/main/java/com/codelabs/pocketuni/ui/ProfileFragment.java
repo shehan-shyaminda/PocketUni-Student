@@ -132,6 +132,7 @@ public class ProfileFragment extends Fragment {
                                                     public void onComplete(@NonNull Task task) {
                                                         customProgressDialog.dismissProgress();
                                                         customAlertDialog.positiveAlert(getContext(), "Awesome!","Your details has been changed!","OK", CFAlertDialog.CFAlertStyle.ALERT);
+                                                        clearEditText();
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
@@ -155,6 +156,7 @@ public class ProfileFragment extends Fragment {
                                                     public void onComplete(@NonNull Task task) {
                                                         customProgressDialog.dismissProgress();
                                                         customAlertDialog.positiveAlert(getContext(), "Awesome!","Your details has been changed!","OK", CFAlertDialog.CFAlertStyle.ALERT);
+                                                        clearEditText();
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
@@ -178,6 +180,7 @@ public class ProfileFragment extends Fragment {
                                                 public void onComplete(@NonNull Task task) {
                                                     customProgressDialog.dismissProgress();
                                                     customAlertDialog.positiveAlert(getContext(), "Awesome!","Your details has been changed!","OK", CFAlertDialog.CFAlertStyle.ALERT);
+                                                    clearEditText();
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
