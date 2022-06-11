@@ -265,8 +265,8 @@ public class ProfileFragment extends Fragment {
         layoutProfile.setEnabled(true);
 
         txtStudentEmail.setText(sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentEmail());
-        if (sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentName().isEmpty()){
-            txtStudentName.setText(sharedPreferencesManager.getPreferences(SharedPreferencesManager.USER_ID));
+        if (!sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentName().isEmpty()){
+            txtStudentName.setText(sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentName());
         }else{
             txtStudentName.setText(sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentEmail().split("@")[0].toUpperCase());
 //            txtStudentName.setText(sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentName());

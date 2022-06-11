@@ -133,7 +133,7 @@ public class HomeFragment extends Fragment {
 //        customProgressDialog.createProgress();
 
         if (sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentName().isEmpty()){
-            txtWelcomeName.setText(sharedPreferencesManager.getPreferences(SharedPreferencesManager.USER_ID));
+            txtWelcomeName.setText(sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentEmail().split("@")[0].toUpperCase());
         }else{
             txtWelcomeName.setText(sharedPreferencesManager.getStudentDataPreferences(SharedPreferencesManager.USER_DETAILS).getStudentName());
         }

@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                         txtPassword.setError("Password Cannot be Empty!");
                     }
                 }else{
+                    Log.e(TAG, "onClick: " + txtUsername.getText().toString().trim().toUpperCase());
                     db.collection("Student").document(txtUsername.getText().toString().toUpperCase()).get()
                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
